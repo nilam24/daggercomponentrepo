@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="emptylist">Empty List</string>
+    <string name="title">Title</string>
+    <string name="duration">Duration</string>
+    <string name="loading">loading.......</string>
+</resources>

@@ -1,0 +1,12 @@
+
+Test Cases & boundary:
+
+1) i)input list for recyclerView shold not be empty -- populate the list.
+  ii)in case empty list show empty text message and recyclerView visibility is set to gone.
+2) i)item click of recyclerview should not have null url value to intent data
+ ii) if on item click url is null then it will not intent to next activity to play video.
+3) i) videoUrl should not be null while setting the uri in videoView
+  ii) in case videoUrl is null showing error message alert --and on dismiss of alert dialog return to the previous activity.
+4) i)showing progressBar when data is buffering and
+ ii)while playing progressBar should not be visible.
+5)Internet permission should be declaredin manifest file.
