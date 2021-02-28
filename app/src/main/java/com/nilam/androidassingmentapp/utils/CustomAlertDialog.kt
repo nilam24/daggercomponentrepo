@@ -9,9 +9,9 @@ import javax.inject.Inject
 //the class is inject through dagger2
 class CustomAlertDialog @Inject constructor(){
 
-        fun setAlertMessage(activity: Activity){
+        fun setAlertMessage(activity: Activity,message:String){
             val alert = AlertDialog.Builder(activity).create()
-            alert.setMessage("Can't play this video")
+            alert.setMessage(message)
             alert.setButton(
                 DialogInterface.BUTTON_POSITIVE,
                 "ok",

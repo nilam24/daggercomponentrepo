@@ -4,4 +4,6 @@
     <string name="title">Title</string>
     <string name="duration">Duration</string>
     <string name="loading">loading.......</string>
+    <string name="alertMessage">Can\'t play this video</string>
+    <string name="alertCompleteMessage">"Video Play End "</string>
 </resources>
