@@ -3,19 +3,24 @@ package com.nilam.androidassingmentapp.activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nilam.androidassingmentapp.R
 import com.nilam.androidassingmentapp.adapter.MediaAdapter
+import com.nilam.androidassingmentapp.dagercomponets.DaggerCheckBandwidthComponent
 import com.nilam.androidassingmentapp.model.MediaItem
+import com.nilam.androidassingmentapp.utils.CheckBandwidth
 import com.nilam.androidassingmentapp.utils.TaskHandler
 import com.nilam.androidassingmentapp.viewmodel.VideoViewModel
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(),
     TaskHandler {
@@ -24,7 +29,9 @@ class MainActivity : AppCompatActivity(),
     lateinit var emptyTextView: TextView
     lateinit var mediaAdapter: MediaAdapter
     lateinit var videoViewModel: VideoViewModel
+    @Inject lateinit var checkBandwidth:CheckBandwidth
     var mediaItemList: List<MediaItem> = ArrayList()
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -34,6 +41,8 @@ class MainActivity : AppCompatActivity(),
             VideoViewModel::class.java
         )
 
+        DaggerCheckBandwidthComponent.create().injectCheckBandwidth(this)
+        checkBandwidth.checkBandwidth(this)
         recyclerViewMediaItem = findViewById(R.id.recycler_media)
         emptyTextView = findViewById(R.id.tvEmpty)
         mediaAdapter = MediaAdapter()

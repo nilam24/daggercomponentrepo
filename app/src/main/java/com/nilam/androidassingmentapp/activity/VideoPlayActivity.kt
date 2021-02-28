@@ -1,24 +1,30 @@
 package com.nilam.androidassingmentapp.activity
 
-import android.app.AlertDialog
+import android.app.Application
 import android.app.PictureInPictureParams
-import android.content.DialogInterface
+import android.content.ContentResolver
 import android.content.Intent
 import android.content.res.Configuration
 import android.media.MediaPlayer
+import android.media.PlaybackParams
+import android.media.browse.MediaBrowser
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.webkit.MimeTypeMap
 import android.widget.MediaController
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.VideoView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.nilam.androidassingmentapp.R
 import com.nilam.androidassingmentapp.dagercomponets.DaggerCustomAlertDialogComponent
 import com.nilam.androidassingmentapp.utils.CustomAlertDialog
 import javax.inject.Inject
+
 
 class VideoPlayActivity : AppCompatActivity() {
     lateinit var video_view: VideoView
@@ -27,6 +33,7 @@ class VideoPlayActivity : AppCompatActivity() {
     lateinit var textLoad: TextView
     // use dagger to inject the class CustomAlertDialog
     @Inject lateinit var alertDialog: CustomAlertDialog
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.video_layout)
@@ -62,6 +69,12 @@ class VideoPlayActivity : AppCompatActivity() {
             if (it != null) {
                 progressBar.visibility = View.GONE
                 textLoad.visibility = View.GONE
+                var playbackParams: PlaybackParams? =null
+                playbackParams= PlaybackParams()
+
+                playbackParams.setSpeed(0.8f)
+                Log.e("default speed",""+playbackParams.speed)
+                it.playbackParams=playbackParams
                 video_view.start()
 
                 it.setOnVideoSizeChangedListener { mediaPlayer, i, i2 ->
@@ -91,7 +104,18 @@ class VideoPlayActivity : AppCompatActivity() {
             }
         }
         video_view.setOnCompletionListener {
-            it.release()
+           try {
+               if (it.isPlaying) {
+                   it.stop()
+                   it.reset()
+                   it.seekTo(0)
+                   it.release()
+               }
+
+               video_view.stopPlayback()
+               video_view.seekTo(0)
+               alertDialog.setAlertMessage(this,resources.getString(R.string.alertCompleteMessage))
+           }catch (e:IllegalAccessException){e.printStackTrace()}
 
         }
         video_view.setOnErrorListener { mediaPlayer, i, i2 ->
@@ -100,7 +124,7 @@ class VideoPlayActivity : AppCompatActivity() {
             progressBar.visibility = View.GONE
             mediaPlayer.release()
             //custom alert dialog injected to call previous activity on dialog dismissed
-            alertDialog.setAlertMessage(this)
+            alertDialog.setAlertMessage(this,resources.getString(R.string.alertMessage))
 
             return@setOnErrorListener true
 
